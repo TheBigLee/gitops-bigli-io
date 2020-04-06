@@ -1,7 +1,7 @@
 config:
   reporting_disabled: true
   http:
-    auth_enabled: true
+    auth-enabled: true
 setDefaultUser:
   enabled: true
   user:
