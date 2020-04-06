@@ -2,6 +2,7 @@ config:
   reporting_disabled: true
   auth_enabled: true
 setDefaultUser:
+  enabled: true
   user:
     existingSecret: influx-credentials
 
