@@ -4,7 +4,7 @@ config:
 persistence:
   enabled: true
   size: 20G
-  storageClassName: local-path-ssd
+  storageClass: local-path-ssd
 
 ingress:
   enabled: true
