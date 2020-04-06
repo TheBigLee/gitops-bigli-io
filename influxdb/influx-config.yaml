@@ -1,5 +1,9 @@
 config:
   reporting_disabled: true
+  auth_enabled: true
+setDefaultUser:
+  user:
+    existingSecret: influx-credentials
 
 persistence:
   existingClaim: influxdb-data-influxdb-0
