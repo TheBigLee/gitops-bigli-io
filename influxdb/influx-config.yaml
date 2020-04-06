@@ -2,10 +2,7 @@ config:
   reporting_disabled: true
 
 persistence:
-  enabled: true
-  size: 20G
-  storageClass: local-path-ssd
-
+  existingClaim: influxdb-data-influxdb-0
 ingress:
   enabled: true
   tls: true

@@ -150,18 +150,10 @@ spec:
         configMap:
           name: influxdb
       # Cannot use existing claim in enterprise mode
+      - name: influxdb-data
+        persistentVolumeClaim:
+          claimName: influxdb-data-influxdb-0
   # Must use volume claim template in enterprise mode
-  volumeClaimTemplates:
-    - metadata:
-        name: influxdb-data
-        annotations:
-      spec:
-        accessModes:
-          - "ReadWriteOnce"
-        resources:
-          requests:
-            storage: "20G"
-        storageClassName: "local-path-ssd"
 ---
 # Source: influxdb/templates/ingress.yaml
 apiVersion: networking.k8s.io/v1beta1
