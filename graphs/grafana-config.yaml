@@ -1,0 +1,27 @@
+env:
+  GF_AUTH_ANONYMOUS_ENABLED: true
+  GF_SERVER_DOMAIN: graphs.bigli.io
+  GF_SERVER_ROOT_URL: https://graphs.bigli.io
+
+ingress:
+  enabled: true
+  hosts:
+  - graphs.bigli.io
+  tls:
+  - hosts:
+    - graphs.bigli.io
+    secretName: graphs-bigli-io-cert
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    ingress.kubernetes.io/ssl-redirect: "true"
+
+persistence:
+  enabled: true
+  size: 1Gi
+  storageClassName: local-path-ssd
+
+rbac:
+  namespaced: true
+
+admin:
+  existingSecret: grafana-credentials

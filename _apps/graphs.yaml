@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: graphs
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: graphs
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: graphs
+    repoURL: https://github.com/TheBigLee/gitops-bigli-io.git
+    targetRevision: HEAD
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: graphs
