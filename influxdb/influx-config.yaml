@@ -1,0 +1,15 @@
+config:
+  reporting_disabled: true
+
+persistence:
+  enabled: true
+  size: 20G
+  storageClassName: local-path-ssd
+
+ingress:
+  enabled: true
+  tls: true
+  secretName: influx-bigli-io-cert
+  hostname: influx.bigli.io
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
