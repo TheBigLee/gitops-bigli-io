@@ -45,6 +45,7 @@ data:
     [subscriber]
 
     [http]
+      auth_enabled = true
 
     # TODO: allow multiple graphite listeners
 
