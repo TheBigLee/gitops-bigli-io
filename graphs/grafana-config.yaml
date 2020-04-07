@@ -15,6 +15,9 @@ ingress:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     ingress.kubernetes.io/ssl-redirect: "true"
 
+plugins:
+  - grafana-clock-panel
+
 persistence:
   enabled: true
   size: 1Gi
