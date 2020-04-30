@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: plex
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: plex
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: plex
+    repoURL: https://github.com/TheBigLee/gitops-bigli-io.git
+    targetRevision: HEAD
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: plex
