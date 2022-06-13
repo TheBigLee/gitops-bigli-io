@@ -1,0 +1,16 @@
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    email: letsencrypt@bigli.io
+    server: https://acme-v02.api.letsencrypt.org/directory 
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    # Add a single challenge solver, HTTP01 using nginx
+    solvers:
+    - http01:
+        ingress:
+          class: traefik
