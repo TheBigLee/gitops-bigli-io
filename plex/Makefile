@@ -1,4 +1,7 @@
 build:
+	helm template nzbget --namespace=plex k8s-at-home/nzbget \
+		-f nzbget-config.yaml \
+		> nzbget.yaml
 	helm template radarr --namespace=plex k8s-at-home/radarr \
 		-f radarr-config.yaml \
 		> radarr.yaml
