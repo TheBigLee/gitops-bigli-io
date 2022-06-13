@@ -674,7 +674,7 @@ spec:
         checksum/configmap: 41e957e712eb07e33383e7aae66c0165392f0420de69db93a50e6357ef19a75d
         checksum/health: cbb020c2a3cf0c8667a25a23e8cf11ef13831ba92633fab9f11398881250d4f2
         checksum/scripts: 3e7b3abe05752ebd8ad1a35beb084967dde4d3af13fae3d4f622d44015bf5c4a
-        checksum/secret: 47ad38625d2a7f4dc70170b9866a230f74f9ba03733d31bd01fb393a6659ed51
+        checksum/secret: 052ef45e3a905885b2f1f9103ada930ee35a42c48d68270dd22c8e50ac1ed63d
     spec:
       
       securityContext:
@@ -811,7 +811,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: replica
 spec:
-  replicas: 3
+  replicas: 0
   selector:
     matchLabels:
       app.kubernetes.io/name: redis
@@ -833,7 +833,7 @@ spec:
         checksum/configmap: 41e957e712eb07e33383e7aae66c0165392f0420de69db93a50e6357ef19a75d
         checksum/health: cbb020c2a3cf0c8667a25a23e8cf11ef13831ba92633fab9f11398881250d4f2
         checksum/scripts: 3e7b3abe05752ebd8ad1a35beb084967dde4d3af13fae3d4f622d44015bf5c4a
-        checksum/secret: ea24bab3872e17622c3fe278d02b01a2dec1611f4036726da5e53cc7d6668065
+        checksum/secret: b278d7db3e14bd3082f0a984dc120ccdc1fca5b45df9b46384483e7578ccb43d
     spec:
       
       securityContext:
