@@ -157,7 +157,8 @@ data:
         cp /opt/bitnami/redis/mounted-etc/redis.conf /opt/bitnami/redis/etc/redis.conf
     fi
     ARGS=("--port" "${REDIS_PORT}")
-    ARGS+=("--protected-mode" "no")
+    ARGS+=("--requirepass" "${REDIS_PASSWORD}")
+    ARGS+=("--masterauth" "${REDIS_PASSWORD}")
     ARGS+=("--include" "/opt/bitnami/redis/etc/redis.conf")
     ARGS+=("--include" "/opt/bitnami/redis/etc/master.conf")
     exec redis-server "${ARGS[@]}"
@@ -206,7 +207,8 @@ data:
     echo "replica-announce-ip $(get_full_hostname "$HOSTNAME")" >> /opt/bitnami/redis/etc/replica.conf
     ARGS=("--port" "${REDIS_PORT}")
     ARGS+=("--slaveof" "${REDIS_MASTER_HOST}" "${REDIS_MASTER_PORT_NUMBER}")
-    ARGS+=("--protected-mode" "no")
+    ARGS+=("--requirepass" "${REDIS_PASSWORD}")
+    ARGS+=("--masterauth" "${REDIS_MASTER_PASSWORD}")
     ARGS+=("--include" "/opt/bitnami/redis/etc/redis.conf")
     ARGS+=("--include" "/opt/bitnami/redis/etc/replica.conf")
     exec redis-server "${ARGS[@]}"
@@ -437,13 +439,13 @@ spec:
             - name: "COMPOSE_PROJECT_NAME"
               value: "paperless"
             - name: "PAPERLESS_DBHOST"
-              value: 
+              value: "paperless-postgresql.paperless"
             - name: "PAPERLESS_OCR_LANGUAGE"
               value: "ger"
             - name: "PAPERLESS_PORT"
               value: "8000"
             - name: "PAPERLESS_REDIS"
-              value: 
+              value: "redis://paperless-redis-master.paperless"
             - name: "PAPERLESS_TIME_ZONE"
               value: "Europe/Zurich"
             - name: "PAPERLESS_URL"
@@ -671,8 +673,8 @@ spec:
       annotations:
         checksum/configmap: 41e957e712eb07e33383e7aae66c0165392f0420de69db93a50e6357ef19a75d
         checksum/health: cbb020c2a3cf0c8667a25a23e8cf11ef13831ba92633fab9f11398881250d4f2
-        checksum/scripts: 9785e1d6c59d4c100db025b8ee78360e6cd34570c80d18ad329386c7e47e2b7c
-        checksum/secret: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+        checksum/scripts: 3e7b3abe05752ebd8ad1a35beb084967dde4d3af13fae3d4f622d44015bf5c4a
+        checksum/secret: 47ad38625d2a7f4dc70170b9866a230f74f9ba03733d31bd01fb393a6659ed51
     spec:
       
       securityContext:
@@ -713,7 +715,12 @@ spec:
             - name: REDIS_REPLICATION_MODE
               value: master
             - name: ALLOW_EMPTY_PASSWORD
-              value: "yes"
+              value: "no"
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: paperless-redis
+                  key: redis-password
             - name: REDIS_TLS_ENABLED
               value: "no"
             - name: REDIS_PORT
@@ -825,8 +832,8 @@ spec:
       annotations:
         checksum/configmap: 41e957e712eb07e33383e7aae66c0165392f0420de69db93a50e6357ef19a75d
         checksum/health: cbb020c2a3cf0c8667a25a23e8cf11ef13831ba92633fab9f11398881250d4f2
-        checksum/scripts: 9785e1d6c59d4c100db025b8ee78360e6cd34570c80d18ad329386c7e47e2b7c
-        checksum/secret: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+        checksum/scripts: 3e7b3abe05752ebd8ad1a35beb084967dde4d3af13fae3d4f622d44015bf5c4a
+        checksum/secret: ea24bab3872e17622c3fe278d02b01a2dec1611f4036726da5e53cc7d6668065
     spec:
       
       securityContext:
@@ -871,7 +878,17 @@ spec:
             - name: REDIS_MASTER_PORT_NUMBER
               value: "6379"
             - name: ALLOW_EMPTY_PASSWORD
-              value: "yes"
+              value: "no"
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: paperless-redis
+                  key: redis-password
+            - name: REDIS_MASTER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: paperless-redis
+                  key: redis-password
             - name: REDIS_TLS_ENABLED
               value: "no"
             - name: REDIS_PORT
