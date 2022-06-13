@@ -1,0 +1,11 @@
+image:
+  tag: latest
+  pullPolicy: Always
+auth:
+  existingSecret: paperless-redis
+  existingSecretPasswordKey: redis-password
+master:
+  persistence:
+    storageClass: local-path-ssd
+replica:
+  replicaCount: 0
