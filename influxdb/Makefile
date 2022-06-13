@@ -1,10 +1,10 @@
 build:
-	helm3 template influxdb --namespace=influxdb influxdata/influxdb \
+	helm template influxdb --namespace=influxdb influxdata/influxdb \
 		-f influx-config.yaml \
 		> influxdb.yaml
 .PHONY: build
 
 update:
-	helm3 repo update
-	helm3 search repo influxdb
+	helm repo update
+	helm search repo influxdb
 .PHONY: update

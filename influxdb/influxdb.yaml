@@ -5,10 +5,10 @@ kind: ServiceAccount
 metadata:
   name: influxdb
   labels:
-    helm.sh/chart: influxdb-4.4.3
+    helm.sh/chart: influxdb-4.12.0
     app.kubernetes.io/name: influxdb
     app.kubernetes.io/instance: influxdb
-    app.kubernetes.io/version: "1.7.10"
+    app.kubernetes.io/version: "1.8.10"
     app.kubernetes.io/managed-by: Helm
 ---
 # Source: influxdb/templates/configmap.yaml
@@ -17,10 +17,10 @@ kind: ConfigMap
 metadata:
   name: influxdb
   labels:
-    helm.sh/chart: influxdb-4.4.3
+    helm.sh/chart: influxdb-4.12.0
     app.kubernetes.io/name: influxdb
     app.kubernetes.io/instance: influxdb
-    app.kubernetes.io/version: "1.7.10"
+    app.kubernetes.io/version: "1.8.10"
     app.kubernetes.io/managed-by: Helm
 data:
   influxdb.conf: |+
@@ -73,10 +73,10 @@ kind: Service
 metadata:
   name: influxdb
   labels:
-    helm.sh/chart: influxdb-4.4.3
+    helm.sh/chart: influxdb-4.12.0
     app.kubernetes.io/name: influxdb
     app.kubernetes.io/instance: influxdb
-    app.kubernetes.io/version: "1.7.10"
+    app.kubernetes.io/version: "1.8.10"
     app.kubernetes.io/managed-by: Helm
 spec:
   type: ClusterIP
@@ -97,10 +97,10 @@ kind: StatefulSet
 metadata:
   name: influxdb
   labels:
-    helm.sh/chart: influxdb-4.4.3
+    helm.sh/chart: influxdb-4.12.0
     app.kubernetes.io/name: influxdb
     app.kubernetes.io/instance: influxdb
-    app.kubernetes.io/version: "1.7.10"
+    app.kubernetes.io/version: "1.8.10"
     app.kubernetes.io/managed-by: Helm
 spec:
   replicas: 1
@@ -118,15 +118,24 @@ spec:
       serviceAccountName: influxdb
       containers:
       - name: influxdb
-        image: "influxdb:1.7.10-alpine"
+        image: "influxdb:1.8.10-alpine"
         imagePullPolicy: "IfNotPresent"
-        resources:
-          {}
         ports:
         - name: api
           containerPort: 8086
         - name: rpc
           containerPort: 8088
+        env:
+          - name: INFLUXDB_ADMIN_USER
+            valueFrom:
+              secretKeyRef:
+                name: influx-credentials
+                key: influxdb-user
+          - name: INFLUXDB_ADMIN_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: influx-credentials
+                key: influxdb-password
         livenessProbe:
           httpGet:
             path: /ping
@@ -157,15 +166,15 @@ spec:
   # Must use volume claim template in enterprise mode
 ---
 # Source: influxdb/templates/ingress.yaml
-apiVersion: networking.k8s.io/v1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: influxdb
   labels:
-    helm.sh/chart: influxdb-4.4.3
+    helm.sh/chart: influxdb-4.12.0
     app.kubernetes.io/name: influxdb
     app.kubernetes.io/instance: influxdb
-    app.kubernetes.io/version: "1.7.10"
+    app.kubernetes.io/version: "1.8.10"
     app.kubernetes.io/managed-by: Helm
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
@@ -180,51 +189,7 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: influxdb
-          servicePort: 8086
----
-# Source: influxdb/templates/post-install-set-auth.yaml
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: influxdb-set-auth
-  labels:
-    helm.sh/chart: influxdb-4.4.3
-    app.kubernetes.io/name: influxdb
-    app.kubernetes.io/instance: influxdb
-    app.kubernetes.io/version: "1.7.10"
-    app.kubernetes.io/managed-by: Helm
-  annotations:
-    "helm.sh/hook": post-install
-    "helm.sh/hook-delete-policy": hook-succeeded
-spec:
-  activeDeadlineSeconds: 
-  backoffLimit: 6
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: influxdb
-        app.kubernetes.io/instance: influxdb
-    spec:
-      containers:
-      - name: influxdb-set-auth
-        image: "appropriate/curl:latest"
-        env:
-          - name: INFLUXDB_USER
-            valueFrom:
-              secretKeyRef:
-                name: influx-credentials
-                key: influxdb-user
-          - name: INFLUXDB_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: influx-credentials
-                key: influxdb-password
-        args:
-          - "/bin/sh"
-          - "-c"
-          - |
-             curl -X POST http://influxdb:8086/query \
-             --data-urlencode \
-             "q=CREATE USER \"${INFLUXDB_USER}\" WITH PASSWORD '${INFLUXDB_PASSWORD}' WITH ALL PRIVILEGES"
-      restartPolicy: OnFailure
+          service:
+            name: influxdb
+            port:
+              number: 8086
