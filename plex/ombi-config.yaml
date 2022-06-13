@@ -1,0 +1,32 @@
+image:
+  tag: latest
+  pullPolicy: Always
+env:
+  TZ: Europe/Zurich
+ingress:
+  main:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: traefik
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      ingress.kubernetes.io/ssl-redirect: "true"
+    hosts:
+      - host: ombi.bigli.io
+        paths:
+          - path: /
+      - host: plexrequests.bigli.io
+        paths:
+          - path: /
+      - host: requests.bigli.io
+        paths:
+          - path: /
+    tls:
+      - hosts:
+          - ombi.bigli.io
+          - plexrequests.bigli.io
+          - requests.bigli.io
+        secretName: ombi-tls
+persistence:
+  config:
+    enabled: true
+    storageClass: local-path-ssd
