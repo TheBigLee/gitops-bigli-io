@@ -1,24 +1,33 @@
 image:
   tag: latest
   pullPolicy: Always
-timezone: Europe/Zurich
+env:
+  PUID: '1001'
+  PGID: '1001'
+  TZ: Europe/Zurich
 ingress:
-  enabled: true
-  annotations:
-    kubernetes.io/ingress.class: traefik
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-    ingress.kubernetes.io/ssl-redirect: "true"
-  hosts:
-    - sonarr.bigli.io
-  tls:
-    - hosts:
-        - sonarr.bigli.io
-      secretName: sonarr-tls
+  main:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: traefik
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      ingress.kubernetes.io/ssl-redirect: "true"
+    hosts:
+      - host: sonarr.bigli.io
+        paths:
+          - path: /
+    tls:
+      - hosts:
+          - sonarr.bigli.io
+        secretName: sonarr-tls
 persistence:
   config:
+    enabled: true
     storageClass: local-path-ssd
   downloads:
+    enabled: true
     existingClaim: media-downloads
   tv:
+    enabled: true
     existingClaim: plex-media
     subPath: tvshows

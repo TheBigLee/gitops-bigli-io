@@ -1,23 +1,33 @@
 image:
   tag: latest
   pullPolicy: Always
+env:
+  PUID: '1001'
+  PGID: '1001'
+  TZ: Europe/Zurich
 ingress:
-  enabled: true
-  annotations:
-    kubernetes.io/ingress.class: traefik
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-    ingress.kubernetes.io/ssl-redirect: "true"
-  hosts:
-    - radarr.bigli.io
-  tls:
-    - hosts:
-        - radarr.bigli.io
-      secretName: radarr-tls
+  main:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: traefik
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      ingress.kubernetes.io/ssl-redirect: "true"
+    hosts:
+      - host: radarr.bigli.io
+        paths:
+          - path: /
+    tls:
+      - hosts:
+          - radarr.bigli.io
+        secretName: radarr-tls
 persistence:
   config:
+    enabled: true
     storageClass: local-path-ssd
   downloads:
+    enabled: true
     existingClaim: media-downloads
   movies:
+    enabled: true
     existingClaim: plex-media
     subPath: movies

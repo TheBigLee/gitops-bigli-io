@@ -1,13 +1,13 @@
 build:
-	helm3 template radarr --namespace=plex billimek/radarr \
+	helm template radarr --namespace=plex k8s-at-home/radarr \
 		-f radarr-config.yaml \
 		> radarr.yaml
-	helm3 template sonarr --namespace=plex billimek/sonarr \
+	helm template sonarr --namespace=plex k8s-at-home/sonarr \
 		-f sonarr-config.yaml \
 		> sonarr.yaml
 .PHONY: build
 
 update:
-	helm3 repo update
-	helm3 search repo billimek
+	helm repo update
+	helm search repo k8s-at-home
 .PHONY: update
