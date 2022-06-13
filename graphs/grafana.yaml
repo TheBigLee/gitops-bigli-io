@@ -396,7 +396,7 @@ spec:
             claimName: graphs-grafana
 ---
 # Source: grafana/templates/ingress.yaml
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: graphs-grafana
