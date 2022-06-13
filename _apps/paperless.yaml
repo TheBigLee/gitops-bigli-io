@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: paperless
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: paperless
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: graphs
+    repoURL: https://github.com/TheBigLee/gitops-bigli-io.git
+    targetRevision: HEAD
