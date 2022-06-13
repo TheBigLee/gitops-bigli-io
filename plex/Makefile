@@ -11,6 +11,9 @@ build:
 	helm template sonarr --namespace=plex k8s-at-home/sonarr \
 		-f sonarr-config.yaml \
 		> sonarr.yaml
+	helm template tautulli --namespace=plex k8s-at-home/tautulli \
+		-f tautulli-config.yaml \
+		> tautulli.yaml
 .PHONY: build
 
 update:
