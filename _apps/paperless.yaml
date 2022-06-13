@@ -11,6 +11,6 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: graphs
+    path: paperless
     repoURL: https://github.com/TheBigLee/gitops-bigli-io.git
     targetRevision: HEAD
