@@ -14,9 +14,3 @@ spec:
     path: cert-manager
     repoURL: https://github.com/TheBigLee/gitops-bigli-io.git
     targetRevision: HEAD
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: cert-manager
-
