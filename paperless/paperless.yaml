@@ -100,13 +100,13 @@ spec:
             - name: "COMPOSE_PROJECT_NAME"
               value: "paperless"
             - name: "PAPERLESS_DBHOST"
-              value: 'paperless-postgresql'
+              value: 'paperless-postgresql.paperless'
             - name: "PAPERLESS_OCR_LANGUAGE"
               value: "ger"
             - name: "PAPERLESS_PORT"
               value: "8000"
             - name: "PAPERLESS_REDIS"
-              value: 'redis://paperless-redis-headless:6379'
+              value: 'redis://paperless-redis-headless.paperless:6379'
             - name: "PAPERLESS_TIME_ZONE"
               value: "Europe/Zurich"
             - name: "PAPERLESS_URL"
