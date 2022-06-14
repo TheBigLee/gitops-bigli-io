@@ -102,7 +102,7 @@ spec:
             - name: "PAPERLESS_DBHOST"
               value: 'paperless-postgresql.paperless'
             - name: "PAPERLESS_OCR_LANGUAGE"
-              value: "ger"
+              value: "deu+eng"
             - name: "PAPERLESS_PORT"
               value: "8000"
             - name: "PAPERLESS_REDIS"
