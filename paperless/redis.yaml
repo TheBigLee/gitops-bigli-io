@@ -175,8 +175,7 @@ data:
         cp /opt/bitnami/redis/mounted-etc/redis.conf /opt/bitnami/redis/etc/redis.conf
     fi
     ARGS=("--port" "${REDIS_PORT}")
-    ARGS+=("--requirepass" "${REDIS_PASSWORD}")
-    ARGS+=("--masterauth" "${REDIS_PASSWORD}")
+    ARGS+=("--protected-mode" "no")
     ARGS+=("--include" "/opt/bitnami/redis/etc/redis.conf")
     ARGS+=("--include" "/opt/bitnami/redis/etc/master.conf")
     exec redis-server "${ARGS[@]}"
@@ -225,8 +224,7 @@ data:
     echo "replica-announce-ip $(get_full_hostname "$HOSTNAME")" >> /opt/bitnami/redis/etc/replica.conf
     ARGS=("--port" "${REDIS_PORT}")
     ARGS+=("--slaveof" "${REDIS_MASTER_HOST}" "${REDIS_MASTER_PORT_NUMBER}")
-    ARGS+=("--requirepass" "${REDIS_PASSWORD}")
-    ARGS+=("--masterauth" "${REDIS_MASTER_PASSWORD}")
+    ARGS+=("--protected-mode" "no")
     ARGS+=("--include" "/opt/bitnami/redis/etc/redis.conf")
     ARGS+=("--include" "/opt/bitnami/redis/etc/replica.conf")
     exec redis-server "${ARGS[@]}"
@@ -341,7 +339,7 @@ spec:
       annotations:
         checksum/configmap: d67420f8c0f66907f2b82708743b47cdbdca3fe947bc2ac4ad8ac8dd40e9e827
         checksum/health: 35ea3374c0e2e6307c41ede5422f09ccd81dae8b8dd6d951fb5dd6dbc86287cf
-        checksum/scripts: 837745469b3bb701dfb2b1d1888fae3128226f258ef8265bd361d7d6990b7b3e
+        checksum/scripts: a6203609923090142c4bdc33647186be93a8c0b05e23fed5f949095cd7d72947
         checksum/secret: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
     spec:
       
@@ -383,12 +381,7 @@ spec:
             - name: REDIS_REPLICATION_MODE
               value: master
             - name: ALLOW_EMPTY_PASSWORD
-              value: "no"
-            - name: REDIS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: paperless-redis
-                  key: redis-password
+              value: "yes"
             - name: REDIS_TLS_ENABLED
               value: "no"
             - name: REDIS_PORT
@@ -501,7 +494,7 @@ spec:
       annotations:
         checksum/configmap: d67420f8c0f66907f2b82708743b47cdbdca3fe947bc2ac4ad8ac8dd40e9e827
         checksum/health: 35ea3374c0e2e6307c41ede5422f09ccd81dae8b8dd6d951fb5dd6dbc86287cf
-        checksum/scripts: 837745469b3bb701dfb2b1d1888fae3128226f258ef8265bd361d7d6990b7b3e
+        checksum/scripts: a6203609923090142c4bdc33647186be93a8c0b05e23fed5f949095cd7d72947
         checksum/secret: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
     spec:
       
@@ -547,17 +540,7 @@ spec:
             - name: REDIS_MASTER_PORT_NUMBER
               value: "6379"
             - name: ALLOW_EMPTY_PASSWORD
-              value: "no"
-            - name: REDIS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: paperless-redis
-                  key: redis-password
-            - name: REDIS_MASTER_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: paperless-redis
-                  key: redis-password
+              value: "yes"
             - name: REDIS_TLS_ENABLED
               value: "no"
             - name: REDIS_PORT
