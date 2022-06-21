@@ -17,6 +17,7 @@ spec:
   resources:
     requests:
       storage: "10G"
+  storageClassName: local-path-ssd
 ---
 # Source: paperless/templates/common.yaml
 kind: PersistentVolumeClaim
@@ -36,6 +37,7 @@ spec:
   resources:
     requests:
       storage: "50G"
+  storageClassName: local-path-ssd
 ---
 # Source: paperless/templates/common.yaml
 kind: PersistentVolumeClaim
