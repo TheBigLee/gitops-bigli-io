@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: docspell
+spec:
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: postgres
+  serviceName: postgres
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: postgres
+      annotations:
+        k8up.io/backupcommand: /bin/bash -c 'PGPASSWORD=${POSTGRES_PASSWORD} pg_dump -U ${POSTGRES_USER} -Fc ${POSTGRES_DB}'
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: postgres
+          image: docker.io/postgres:13.8
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: postgres
+              containerPort: 5432
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: docspell
+                  key: DB_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: docspell
+                  key: DB_PASS
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: docspell
+                  key: DB_NAME
+            - name: PGUSER
+              value: postgres
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data/pgdata
+              name: postgres
+              subPath: postgres-db
+  volumeClaimTemplates:
+  - metadata:
+      name: postgres
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 1Gi

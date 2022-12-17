@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: postgres
+  name: postgres
+  namespace: docspell
+spec:
+  ports:
+  - name: "5432"
+    port: 5432
+    protocol: TCP
+    targetPort: 5432
+  selector:
+    app: postgres
+  type: ClusterIP

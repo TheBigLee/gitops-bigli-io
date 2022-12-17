@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: restserver
+  name: restserver
+  namespace: docspell
+spec:
+  ports:
+  - name: "7880"
+    port: 7880
+    protocol: TCP
+    targetPort: 7880
+  selector:
+    app: restserver
+  type: ClusterIP

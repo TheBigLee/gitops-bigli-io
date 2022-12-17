@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: docspell
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: docspell
+    server: https://kubernetes.default.svc
+  project: apps
+  source:
+    path: docspell
+    repoURL: https://git.tbrnt.ch/tobru/gitops-tbrnt.git
+    targetRevision: HEAD
+    directory:
+      recurse: true
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: docspell

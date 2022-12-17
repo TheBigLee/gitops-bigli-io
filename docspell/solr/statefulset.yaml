@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: solr
+  namespace: docspell
+spec:
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: solr
+  serviceName: solr
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: solr
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: solr
+          image: docker.io/solr:8
+          imagePullPolicy: Always
+          command:
+          - solr-precreate
+          - docspell
+          ports:
+            - name: solr
+              containerPort: 8983
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /solr/docspell/admin/ping
+              port: 8983
+            initialDelaySeconds: 30
+            periodSeconds: 60
+            timeoutSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /solr/docspell/admin/ping
+              port: 8983
+            initialDelaySeconds: 30
+            periodSeconds: 60
+            timeoutSeconds: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          volumeMounts:
+            - mountPath: /var/solr
+              name: solr
+              subPath: solr-db
+  volumeClaimTemplates:
+  - metadata:
+      name: solr
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 1Gi

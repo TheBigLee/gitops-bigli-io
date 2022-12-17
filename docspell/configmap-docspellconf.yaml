@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: docspell-config
+  namespace: docspell
+data:
+  docspell.conf: |
+    docspell.server {
+      base-url = "https://"${BASE_URL}
+      internal-url = "http://restserver:7880"
+      bind {
+        address = "0.0.0.0"
+      }
+      integration-endpoint {
+        enabled = true
+        http-header {
+          enabled = true
+          header-value = ${?DOCSPELL_HEADER_VALUE}
+        }
+      }
+      admin-endpoint {
+        secret = ${ADMIN_ENDPOINT_SECRET}
+      }
+      # Configuration of the full-text search engine.
+      full-text-search {
+        enabled = true
+        solr = {
+          url = "http://solrtcp:8983/solr/docspell"
+        }
+      }
+      backend {
+        jdbc {
+          url = "jdbc:"${DB_TYPE}"://"${DB_HOST}":"${DB_PORT}"/"${DB_NAME}
+          user = ${DB_USER}
+          password = ${DB_PASS}
+        }
+        signup {
+          mode = "closed"
+        }
+      }
+    }
+
+    docspell.joex {
+      base-url = "http://joex:7878"
+      bind {
+        address = "0.0.0.0"
+      }
+      jdbc {
+        url = "jdbc:"${DB_TYPE}"://"${DB_HOST}":"${DB_PORT}"/"${DB_NAME}
+        user = ${DB_USER}
+        password = ${DB_PASS}
+      }
+      full-text-search {
+        enabled = true
+        solr = {
+          url = "http://solrtcp:8983/solr/docspell"
+        }
+      }
+      scheduler {
+        pool-size = 1
+      }
+    }
+

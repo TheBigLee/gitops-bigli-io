@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: docspell-env
+  namespace: docspell
+data:
+  TZ: Europe/Berlin
+  DB_TYPE: postgresql
+  DB_HOST: postgres
+  DB_PORT: "5432"
+  BASE_URL: docs.bigli.io

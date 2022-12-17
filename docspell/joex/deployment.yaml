@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: joex
+  name: joex
+  namespace: docspell
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: joex
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: joex
+    spec:
+      containers:
+      - image: docker.io/docspell/joex:v0.38.0
+        name: joex
+        args:
+        - /etc/docspell/docspell.conf
+        envFrom:
+        - configMapRef:
+            name: docspell-env
+        - secretRef:
+            name: docspell
+        ports:
+        - containerPort: 7878
+        volumeMounts:
+          - name: config-volume
+            mountPath: /etc/docspell
+      volumes:
+        - name: config-volume
+          configMap:
+            name: docspell-config

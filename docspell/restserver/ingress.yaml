@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    ingress.kubernetes.io/ssl-redirect: "true"
+    kubernetes.io/ingress.class: traefik
+  name: restserver
+  namespace: docspell
+spec:
+  rules:
+  - host: docs.bigli.io
+    http:
+      paths:
+      - path: /
+        backend:
+          service:
+            name: restserver
+            port:
+              number: 7880
+        pathType: Prefix
+  tls:
+  - hosts:
+    - docs.bigli.io
+    secretName: docspell-tls

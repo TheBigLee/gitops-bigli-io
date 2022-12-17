@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: restserver
+  name: restserver
+  namespace: docspell
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: restserver
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: restserver
+    spec:
+      containers:
+      - image: docker.io/docspell/restserver:v0.38.0
+        name: docspell
+        args:
+        - /etc/docspell/docspell.conf
+        envFrom:
+        - configMapRef:
+            name: docspell-env
+        - secretRef:
+            name: docspell
+        ports:
+        - containerPort: 7880
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 7880
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 7880
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        volumeMounts:
+          - name: config-volume
+            mountPath: /etc/docspell
+      volumes:
+        - name: config-volume
+          configMap:
+            name: docspell-config
