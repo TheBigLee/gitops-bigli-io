@@ -15,8 +15,6 @@ spec:
     metadata:
       labels:
         app: postgres
-      annotations:
-        k8up.io/backupcommand: /bin/bash -c 'PGPASSWORD=${POSTGRES_PASSWORD} pg_dump -U ${POSTGRES_USER} -Fc ${POSTGRES_DB}'
     spec:
       terminationGracePeriodSeconds: 10
       containers:
