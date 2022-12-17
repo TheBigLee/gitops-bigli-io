@@ -12,7 +12,7 @@ spec:
   project: default
   source:
     path: docspell
-    repoURL: https://git.tbrnt.ch/tobru/gitops-tbrnt.git
+    repoURL: https://github.com/TheBigLee/gitops-bigli-io.git
     targetRevision: HEAD
     directory:
       recurse: true
