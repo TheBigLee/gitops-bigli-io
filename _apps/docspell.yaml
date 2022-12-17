@@ -9,7 +9,7 @@ spec:
   destination:
     namespace: docspell
     server: https://kubernetes.default.svc
-  project: apps
+  project: default
   source:
     path: docspell
     repoURL: https://git.tbrnt.ch/tobru/gitops-tbrnt.git
