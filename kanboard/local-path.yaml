@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"local-path-provisioner","namespace":"local-path-storage"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"local-path-provisioner"}},"template":{"metadata":{"labels":{"app":"local-path-provisioner"}},"spec":{"containers":[{"command":["local-path-provisioner","--debug","start","--config","/etc/config/config.json"],"env":[{"name":"POD_NAMESPACE","valueFrom":{"fieldRef":{"fieldPath":"metadata.namespace"}}}],"image":"rancher/local-path-provisioner:v0.0.22","imagePullPolicy":"IfNotPresent","name":"local-path-provisioner","volumeMounts":[{"mountPath":"/etc/config/","name":"config-volume"}]}],"serviceAccountName":"local-path-provisioner-service-account","volumes":[{"configMap":{"name":"local-path-config"},"name":"config-volume"}]}}}}
+  creationTimestamp: "2022-09-02T17:58:21Z"
+  generation: 1
+  name: local-path-provisioner
+  namespace: local-path-storage
+  resourceVersion: "133403957"
+  uid: 455cc526-41fb-46fa-b4ab-32c71923a4e8
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: local-path-provisioner
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: local-path-provisioner
+    spec:
+      containers:
+      - command:
+        - local-path-provisioner
+        - --debug
+        - start
+        - --config
+        - /etc/config/config.json
+        env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        image: rancher/local-path-provisioner:v0.0.22
+        imagePullPolicy: IfNotPresent
+        name: local-path-provisioner
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /etc/config/
+          name: config-volume
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: local-path-provisioner-service-account
+      serviceAccountName: local-path-provisioner-service-account
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: local-path-config
+        name: config-volume
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2022-09-02T17:58:23Z"
+    lastUpdateTime: "2022-09-02T17:58:23Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2022-09-02T17:58:21Z"
+    lastUpdateTime: "2022-09-02T17:58:23Z"
+    message: ReplicaSet "local-path-provisioner-7c795b5576" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  observedGeneration: 1
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

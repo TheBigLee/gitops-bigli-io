@@ -16,6 +16,8 @@ spec:
     targetRevision: HEAD
     directory:
       recurse: true
+  syncPolicy:
+    automated: {}
 ---
 apiVersion: v1
 kind: Namespace
