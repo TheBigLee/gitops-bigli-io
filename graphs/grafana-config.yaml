@@ -2,6 +2,7 @@ env:
   GF_AUTH_ANONYMOUS_ENABLED: true
   GF_SERVER_DOMAIN: graphs.bigli.io
   GF_SERVER_ROOT_URL: https://graphs.bigli.io
+  GF_FEATURE_TOGGLES_ENABLE: publicDashboards
 
 ingress:
   enabled: true
