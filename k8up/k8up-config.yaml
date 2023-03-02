@@ -1,0 +1,8 @@
+envVars:
+  - name: BACKUP_GLOBALREPOPASSWOR
+    valueFrom:
+      secretKeyRef:
+        name: global-backup-secret
+        key: secret
+  - name: BACKUP_GLOBALS3BUCKET
+    value: bigli-io-k8up

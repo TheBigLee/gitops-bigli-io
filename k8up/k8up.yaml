@@ -1,0 +1,418 @@
+---
+# Source: k8up/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: k8up
+  labels:
+    helm.sh/chart: k8up-4.1.0
+    app.kubernetes.io/name: k8up
+    app.kubernetes.io/instance: k8up
+    app.kubernetes.io/managed-by: Helm
+---
+# Source: k8up/templates/operator-clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: 'k8up-manager'
+  labels:
+    helm.sh/chart: k8up-4.1.0
+    app.kubernetes.io/name: k8up
+    app.kubernetes.io/instance: k8up
+    app.kubernetes.io/managed-by: Helm
+rules:
+  - apiGroups:
+      - apps
+    resources:
+      - deployments
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - batch
+    resources:
+      - jobs
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - create
+      - get
+      - list
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
+  - apiGroups:
+      - ""
+    resources:
+      - persistentvolumeclaims
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - persistentvolumes
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - '*'
+  - apiGroups:
+      - ""
+    resources:
+      - pods/exec
+    verbs:
+      - '*'
+  - apiGroups:
+      - ""
+    resources:
+      - serviceaccounts
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - k8up.io
+    resources:
+      - archives
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - k8up.io
+    resources:
+      - archives/finalizers
+      - archives/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - k8up.io
+    resources:
+      - backups
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - k8up.io
+    resources:
+      - backups/finalizers
+      - backups/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - k8up.io
+    resources:
+      - checks
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - k8up.io
+    resources:
+      - checks/finalizers
+      - checks/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - k8up.io
+    resources:
+      - effectiveschedules
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - k8up.io
+    resources:
+      - effectiveschedules/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - k8up.io
+    resources:
+      - prebackuppods
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - k8up.io
+    resources:
+      - prebackuppods/finalizers
+      - prebackuppods/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - k8up.io
+    resources:
+      - prunes
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - k8up.io
+    resources:
+      - prunes/finalizers
+      - prunes/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - k8up.io
+    resources:
+      - restores
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - k8up.io
+    resources:
+      - restores/finalizers
+      - restores/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - k8up.io
+    resources:
+      - schedules
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - k8up.io
+    resources:
+      - schedules/finalizers
+      - schedules/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - rbac.authorization.k8s.io
+    resources:
+      - rolebindings
+      - roles
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - watch
+---
+# Source: k8up/templates/user-clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    rbac.authorization.k8s.io/aggregate-to-admin: "true"
+    rbac.authorization.k8s.io/aggregate-to-edit: "true"
+    app.kubernetes.io/name: k8up
+    app.kubernetes.io/instance: k8up
+    app.kubernetes.io/managed-by: Helm
+  name: k8up-edit
+rules:
+- apiGroups:
+  - k8up.io
+  resources:
+  - '*'
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+---
+# Source: k8up/templates/user-clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    rbac.authorization.k8s.io/aggregate-to-view: "true"
+    app.kubernetes.io/name: k8up
+    app.kubernetes.io/instance: k8up
+    app.kubernetes.io/managed-by: Helm
+  name: k8up-view
+rules:
+- apiGroups:
+  - k8up.io
+  resources:
+  - '*'
+  verbs:
+  - get
+  - list
+  - watch
+---
+# Source: k8up/templates/clusterrolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: k8up
+  labels:
+    helm.sh/chart: k8up-4.1.0
+    app.kubernetes.io/name: k8up
+    app.kubernetes.io/instance: k8up
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: k8up-manager
+subjects:
+- kind: ServiceAccount
+  name: k8up
+  namespace: k8up
+---
+# Source: k8up/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8up-metrics
+  labels:
+    helm.sh/chart: k8up-4.1.0
+    app.kubernetes.io/name: k8up
+    app.kubernetes.io/instance: k8up
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
+  selector:
+    app.kubernetes.io/name: k8up
+    app.kubernetes.io/instance: k8up
+---
+# Source: k8up/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8up
+  labels:
+    helm.sh/chart: k8up-4.1.0
+    app.kubernetes.io/name: k8up
+    app.kubernetes.io/instance: k8up
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: k8up
+      app.kubernetes.io/instance: k8up
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: k8up
+        app.kubernetes.io/instance: k8up
+    spec:
+      securityContext:
+        {}
+      containers:
+        - name: k8up-operator
+          image: "ghcr.io/k8up-io/k8up:v2.6.0"
+          imagePullPolicy: IfNotPresent
+          args: [ operator ]
+          env:
+            - name: BACKUP_IMAGE
+              value: "ghcr.io/k8up-io/k8up:v2.6.0"
+            - name: BACKUP_ENABLE_LEADER_ELECTION
+              value: "true"
+            - name: BACKUP_OPERATOR_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          ports:
+            - name: http
+              containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          securityContext:
+            {}
+          resources:
+            limits:
+              memory: 256Mi
+            requests:
+              cpu: 20m
+              memory: 128Mi
+      serviceAccountName: k8up
