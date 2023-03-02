@@ -9988,7 +9988,7 @@ spec:
         - ""
         - --appendonly
         - "no"
-        image: redis:6.2.6-alpine
+        image: redis:6.2.11-alpine
         imagePullPolicy: Always
         name: redis
         ports:
