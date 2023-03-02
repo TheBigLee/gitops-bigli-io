@@ -285,7 +285,7 @@ spec:
       enableServiceLinks: true
       containers:
         - name: grafana
-          image: "grafana/grafana:8.5.21"
+          image: "grafana/grafana:9.4.1"
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - name: config
