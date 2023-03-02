@@ -229,8 +229,6 @@ spec:
               value: /etc/grafana/provisioning
             - name: "GF_AUTH_ANONYMOUS_ENABLED"
               value: "true"
-            - name: "GF_FEATURE_TOGGLES_ENABLE"
-              value: "publicDashboards"
             - name: "GF_SERVER_DOMAIN"
               value: "graphs.bigli.io"
             - name: "GF_SERVER_ROOT_URL"
