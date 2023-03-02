@@ -402,7 +402,7 @@ spec:
   serviceAccountName: graphs-grafana-test
   containers:
     - name: graphs-test
-      image: "bats/bats:v1.4.1"
+      image: "bats/bats:1.9.0"
       imagePullPolicy: "IfNotPresent"
       command: ["/opt/bats/bin/bats", "-t", "/tests/run.sh"]
       volumeMounts:
