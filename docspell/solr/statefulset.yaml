@@ -19,7 +19,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
         - name: solr
-          image: docker.io/solr:8
+          image: docker.io/solr:9
           imagePullPolicy: Always
           command:
           - solr-precreate
