@@ -5,7 +5,7 @@ kind: ServiceAccount
 metadata:
   name: k8up
   labels:
-    helm.sh/chart: k8up-4.1.0
+    helm.sh/chart: k8up-4.0.1
     app.kubernetes.io/name: k8up
     app.kubernetes.io/instance: k8up
     app.kubernetes.io/managed-by: Helm
@@ -16,7 +16,7 @@ kind: ClusterRole
 metadata:
   name: 'k8up-manager'
   labels:
-    helm.sh/chart: k8up-4.1.0
+    helm.sh/chart: k8up-4.0.1
     app.kubernetes.io/name: k8up
     app.kubernetes.io/instance: k8up
     app.kubernetes.io/managed-by: Helm
@@ -46,6 +46,15 @@ rules:
       - update
       - watch
   - apiGroups:
+      - batch
+    resources:
+      - jobs/finalizers
+      - jobs/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
       - coordination.k8s.io
     resources:
       - leases
@@ -65,14 +74,6 @@ rules:
       - ""
     resources:
       - persistentvolumeclaims
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - ""
-    resources:
-      - persistentvolumes
     verbs:
       - get
       - list
@@ -327,7 +328,7 @@ kind: ClusterRoleBinding
 metadata:
   name: k8up
   labels:
-    helm.sh/chart: k8up-4.1.0
+    helm.sh/chart: k8up-4.0.1
     app.kubernetes.io/name: k8up
     app.kubernetes.io/instance: k8up
     app.kubernetes.io/managed-by: Helm
@@ -346,7 +347,7 @@ kind: Service
 metadata:
   name: k8up-metrics
   labels:
-    helm.sh/chart: k8up-4.1.0
+    helm.sh/chart: k8up-4.0.1
     app.kubernetes.io/name: k8up
     app.kubernetes.io/instance: k8up
     app.kubernetes.io/managed-by: Helm
@@ -366,7 +367,7 @@ kind: Deployment
 metadata:
   name: k8up
   labels:
-    helm.sh/chart: k8up-4.1.0
+    helm.sh/chart: k8up-4.0.1
     app.kubernetes.io/name: k8up
     app.kubernetes.io/instance: k8up
     app.kubernetes.io/managed-by: Helm
@@ -386,12 +387,12 @@ spec:
         {}
       containers:
         - name: k8up-operator
-          image: "ghcr.io/k8up-io/k8up:v2.6.0"
+          image: "ghcr.io/k8up-io/k8up:v2.5.2"
           imagePullPolicy: IfNotPresent
           args: [ operator ]
           env:
             - name: BACKUP_IMAGE
-              value: "ghcr.io/k8up-io/k8up:v2.6.0"
+              value: "ghcr.io/k8up-io/k8up:v2.5.2"
             - name: BACKUP_ENABLE_LEADER_ELECTION
               value: "true"
             - name: BACKUP_OPERATOR_NAMESPACE
