@@ -1,0 +1,29 @@
+apiVersion: k8up.io/v1
+kind: Schedule
+metadata:
+  name: cluster-backup
+  namespace: k8up-cluster-backup
+spec:
+  backend:
+    b2:
+      accountIDSecretRef:
+        key: access-key-id
+        name: backup-b2-credentials
+      accountKeySecretRef:
+        key: access-key-secret
+        name: backup-b2-credentials
+      path: cluster-backup
+      bucket: bigli-io-k8up
+  backup:
+    keepJobs: 5
+    resources: {}
+    schedule: 19 * * * *
+  check:
+    resources: {}
+    schedule: 30 3 * * *
+  prune:
+    resources: {}
+    retention:
+      keepDaily: 30
+      keepLast: 20
+    schedule: 10 */4 * * *
