@@ -42,7 +42,7 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.namespace
-        image: rancher/local-path-provisioner:v0.0.22
+        image: rancher/local-path-provisioner:v0.0.23
         imagePullPolicy: IfNotPresent
         name: local-path-provisioner
         resources: {}
