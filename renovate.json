@@ -1,0 +1,17 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "labels": ["maintenance"],
+  "enabledManagers": ["kubernetes"],
+  "kubernetes": {
+    "fileMatch": ["(^|/)*\\.yaml$"]
+  },
+  "packageRules": [
+    {
+      "paths": [
+        "renovate/**"
+      ],
+      "automerge": true,
+      "requiredStatusChecks": null
+    }
+  ]
+}
