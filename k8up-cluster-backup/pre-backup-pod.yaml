@@ -1,0 +1,107 @@
+---
+apiVersion: v1
+data:
+  known-to-fail: '.+mutators
+
+    .+reviews
+
+    .+validators
+
+    bindings
+
+    deploymentconfigrollbacks
+
+    imagesignatures
+
+    imagestreamimages
+
+    imagestreamimports
+
+    imagestreammappings
+
+    mutations
+
+    projectrequests
+
+    useridentitymappings
+
+    validations'
+  must-exist: 'configmaps
+
+    daemonsets
+
+    deployments
+
+    endpoints
+
+    horizontalpodautoscalers
+
+    ingresses
+
+    jobs
+
+    limitranges
+
+    namespaces
+
+    nodes
+
+    persistentvolumeclaims
+
+    persistentvolumes
+
+    replicasets
+
+    resourcequotas
+
+    roles
+
+    secrets
+
+    serviceaccounts
+
+    services
+
+    statefulsets'
+kind: ConfigMap
+metadata:
+  name: object-dumper
+  namespace: k8up-cluster-backup
+---
+apiVersion: k8up.io/v1
+kind: PreBackupPod
+metadata:
+  name: object-dumper
+  namespace: k8up-cluster-backup
+spec:
+  backupCommand: /usr/local/bin/dump-objects -sd /data
+  fileExtension: .tar.gz
+  pod:
+    spec:
+      containers:
+        - command:
+            - tail
+            - -f
+            - /dev/null
+          env:
+            - name: HOME
+              value: /home/dumper
+          image: docker.io/projectsyn/k8s-object-dumper:v0.2.3
+          imagePullPolicy: IfNotPresent
+          name: object-dumper
+          volumeMounts:
+            - mountPath: /data
+              name: data
+            - mountPath: /home/dumper
+              name: home
+            - mountPath: /usr/local/share/k8s-object-dumper
+              name: config
+      serviceAccountName: object-backup
+      volumes:
+        - emptyDir: {}
+          name: data
+        - emptyDir: {}
+          name: home
+        - configMap:
+            name: object-dumper
+          name: config
