@@ -12,3 +12,5 @@ spec:
     path: _apps
     repoURL: https://github.com/TheBigLee/gitops-bigli-io.git
     targetRevision: HEAD
+  syncPolicy:
+    automated: {}
