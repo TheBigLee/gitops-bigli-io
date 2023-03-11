@@ -18,7 +18,7 @@ spec:
         app: joex
     spec:
       containers:
-      - image: docker.io/docspell/joex:v0.39.0
+      - image: docker.io/docspell/joex:v0.40.0
         name: joex
         args:
         - /etc/docspell/docspell.conf
