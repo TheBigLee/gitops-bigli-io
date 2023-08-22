@@ -1,0 +1,86 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ssd-provisioner
+  namespace: local-path-provisioner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ssd-provisioner
+  template:
+    metadata:
+      labels:
+        app: ssd-provisioner
+    spec:
+      serviceAccountName: local-path-provisioner-service-account
+      containers:
+      - name: ssd-provisioner
+        image: rancher/local-path-provisioner:v0.0.24
+        imagePullPolicy: IfNotPresent
+        command:
+        - local-path-provisioner
+        - --debug
+        - start
+        - --provisioner-name
+        - rancher.io/local-path-ssd
+        - --config
+        - /etc/config/config.json
+        - --configmap-name
+        - ssd-local-path-config
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/config/
+        env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+      volumes:
+        - name: config-volume
+          configMap:
+            name: ssd-local-path-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hdd-provisioner
+  namespace: local-path-provisioner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hdd-provisioner
+  template:
+    metadata:
+      labels:
+        app: hdd-provisioner
+    spec:
+      serviceAccountName: local-path-provisioner-service-account
+      containers:
+      - name: hdd-provisioner
+        image: rancher/local-path-provisioner:v0.0.24
+        imagePullPolicy: IfNotPresent
+        command:
+        - local-path-provisioner
+        - --debug
+        - start
+        - --provisioner-name
+        - rancher.io/local-path-hdd
+        - --config
+        - /etc/config/config.json
+        - --configmap-name
+        - hdd-local-path-config
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/config/
+        env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+      volumes:
+        - name: config-volume
+          configMap:
+            name: hdd-local-path-config

@@ -1,0 +1,16 @@
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-path-ssd
+provisioner: rancher.io/local-path-ssd
+volumeBindingMode: WaitForFirstConsumer
+reclaimPolicy: Delete
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-path-hdd
+provisioner: rancher.io/local-path-hdd
+volumeBindingMode: WaitForFirstConsumer
+reclaimPolicy: Delete
