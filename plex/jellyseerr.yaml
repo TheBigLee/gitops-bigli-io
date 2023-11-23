@@ -73,7 +73,7 @@ spec:
               protocol: TCP
           volumeMounts:
             - name: config
-              mountPath: /config
+              mountPath: /app/config
           livenessProbe:
             tcpSocket:
               port: 5055
