@@ -119,7 +119,7 @@ spec:
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: nzbget-config
+            claimName: sabnzbd-config
         - name: downloads
           persistentVolumeClaim:
             claimName: media-downloads
