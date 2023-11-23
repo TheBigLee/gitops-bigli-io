@@ -1,15 +1,11 @@
 ---
-# Source: ombi/templates/common.yaml
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: ombi-config
   labels:
     app.kubernetes.io/instance: ombi
-    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ombi
-    app.kubernetes.io/version: 4.16.12
-    helm.sh/chart: ombi-11.4.0
   annotations:
 spec:
   accessModes:
@@ -19,17 +15,13 @@ spec:
       storage: "1Gi"
   storageClassName: "local-path-ssd"
 ---
-# Source: ombi/templates/common.yaml
 apiVersion: v1
 kind: Service
 metadata:
   name: ombi
   labels:
     app.kubernetes.io/instance: ombi
-    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ombi
-    app.kubernetes.io/version: 4.16.12
-    helm.sh/chart: ombi-11.4.0
   annotations:
 spec:
   type: ClusterIP
@@ -42,17 +34,13 @@ spec:
     app.kubernetes.io/name: ombi
     app.kubernetes.io/instance: ombi
 ---
-# Source: ombi/templates/common.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ombi
   labels:
     app.kubernetes.io/instance: ombi
-    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ombi
-    app.kubernetes.io/version: 4.16.12
-    helm.sh/chart: ombi-11.4.0
 spec:
   revisionHistoryLimit: 3
   replicas: 1
@@ -64,27 +52,25 @@ spec:
       app.kubernetes.io/instance: ombi
   template:
     metadata:
-      
       labels:
         app.kubernetes.io/name: ombi
         app.kubernetes.io/instance: ombi
     spec:
-      
       serviceAccountName: default
       automountServiceAccountToken: true
       dnsPolicy: ClusterFirst
       enableServiceLinks: true
       containers:
         - name: ombi
-          image: "ghcr.io/linuxserver/ombi:latest"
+          image: "lscr.io/linuxserver/ombi:latest"
           imagePullPolicy: Always
           env:
-            - name: "PGID"
-              value: "1001"
-            - name: "PUID"
-              value: "1001"
             - name: "TZ"
               value: "Europe/Zurich"
+            - name: "PGID"
+              value: "1000"
+            - name: "PUID"
+              value: "1000"
           ports:
             - name: http
               containerPort: 3579
@@ -118,17 +104,13 @@ spec:
           persistentVolumeClaim:
             claimName: ombi-config
 ---
-# Source: ombi/templates/common.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ombi
   labels:
     app.kubernetes.io/instance: ombi
-    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ombi
-    app.kubernetes.io/version: 4.16.12
-    helm.sh/chart: ombi-11.4.0
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     ingress.kubernetes.io/ssl-redirect: "true"
