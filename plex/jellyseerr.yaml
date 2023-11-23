@@ -1,0 +1,129 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: jellyseerr-config
+  labels:
+    app.kubernetes.io/instance: jellyseer
+    app.kubernetes.io/name: jellyseer
+  annotations:
+spec:
+  accessModes:
+    - "ReadWriteOnce"
+  resources:
+    requests:
+      storage: "1Gi"
+  storageClassName: "local-path-ssd"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jellyseerr
+  labels:
+    app.kubernetes.io/instance: jellyseerr
+    app.kubernetes.io/name: jellyseerr
+  annotations:
+spec:
+  type: ClusterIP
+  ports:
+  - port: 5055
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app.kubernetes.io/name: jellyseerr
+    app.kubernetes.io/instance: jellyseerr
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jellyseerr
+  labels:
+    app.kubernetes.io/instance: jellyseerr
+    app.kubernetes.io/name: jellyseerr
+spec:
+  revisionHistoryLimit: 3
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: jellyseerr
+      app.kubernetes.io/instance: jellyseerr
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: jellyseerr
+        app.kubernetes.io/instance: jellyseerr
+    spec:
+      serviceAccountName: default
+      automountServiceAccountToken: true
+      dnsPolicy: ClusterFirst
+      enableServiceLinks: true
+      containers:
+        - name: jellyseerr
+          image: "fallenbagel/jellyseerr:latest"
+          imagePullPolicy: Always
+          env:
+            - name: "TZ"
+              value: "Europe/Zurich"
+          ports:
+            - name: http
+              containerPort: 5055
+              protocol: TCP
+          volumeMounts:
+            - name: config
+              mountPath: /config
+          livenessProbe:
+            tcpSocket:
+              port: 5055
+            initialDelaySeconds: 0
+            failureThreshold: 3
+            timeoutSeconds: 1
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 5055
+            initialDelaySeconds: 0
+            failureThreshold: 3
+            timeoutSeconds: 1
+            periodSeconds: 10
+          startupProbe:
+            tcpSocket:
+              port: 5055
+            initialDelaySeconds: 0
+            failureThreshold: 30
+            timeoutSeconds: 1
+            periodSeconds: 5
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: jellyseerr-config
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jellyseerr
+  labels:
+    app.kubernetes.io/instance: jellyseerr
+    app.kubernetes.io/name: jellyseerr
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    ingress.kubernetes.io/ssl-redirect: "true"
+    kubernetes.io/ingress.class: traefik
+spec:
+  tls:
+    - hosts:
+        - "jellyseerr.bigli.io"
+      secretName: "jellyseerr-tls"
+  rules:
+    - host: "jellyseerr.bigli.io"
+      http:
+        paths:
+          - path: "/"
+            pathType: Prefix
+            backend:
+              service:
+                name: jellyseerr
+                port:
+                  number: 5055
