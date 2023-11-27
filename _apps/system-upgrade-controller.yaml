@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: k8up-cluster-backup
+  name: system-upgrade-controller
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
