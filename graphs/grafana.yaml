@@ -4,10 +4,10 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   labels:
-    helm.sh/chart: grafana-6.58.8
+    helm.sh/chart: grafana-7.0.8
     app.kubernetes.io/name: grafana
     app.kubernetes.io/instance: graphs
-    app.kubernetes.io/version: "10.0.3"
+    app.kubernetes.io/version: "10.1.5"
     app.kubernetes.io/managed-by: Helm
   name: graphs-grafana
   namespace: graphs
@@ -19,10 +19,10 @@ metadata:
   name: graphs-grafana
   namespace: graphs
   labels:
-    helm.sh/chart: grafana-6.58.8
+    helm.sh/chart: grafana-7.0.8
     app.kubernetes.io/name: grafana
     app.kubernetes.io/instance: graphs
-    app.kubernetes.io/version: "10.0.3"
+    app.kubernetes.io/version: "10.1.5"
     app.kubernetes.io/managed-by: Helm
 data:
   plugins: grafana-clock-panel
@@ -48,10 +48,10 @@ metadata:
   name: graphs-grafana
   namespace: graphs
   labels:
-    helm.sh/chart: grafana-6.58.8
+    helm.sh/chart: grafana-7.0.8
     app.kubernetes.io/name: grafana
     app.kubernetes.io/instance: graphs
-    app.kubernetes.io/version: "10.0.3"
+    app.kubernetes.io/version: "10.1.5"
     app.kubernetes.io/managed-by: Helm
   finalizers:
     - kubernetes.io/pvc-protection
@@ -70,10 +70,10 @@ metadata:
   name: graphs-grafana
   namespace: graphs
   labels:
-    helm.sh/chart: grafana-6.58.8
+    helm.sh/chart: grafana-7.0.8
     app.kubernetes.io/name: grafana
     app.kubernetes.io/instance: graphs
-    app.kubernetes.io/version: "10.0.3"
+    app.kubernetes.io/version: "10.1.5"
     app.kubernetes.io/managed-by: Helm
 rules: []
 ---
@@ -84,10 +84,10 @@ metadata:
   name: graphs-grafana
   namespace: graphs
   labels:
-    helm.sh/chart: grafana-6.58.8
+    helm.sh/chart: grafana-7.0.8
     app.kubernetes.io/name: grafana
     app.kubernetes.io/instance: graphs
-    app.kubernetes.io/version: "10.0.3"
+    app.kubernetes.io/version: "10.1.5"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -105,10 +105,10 @@ metadata:
   name: graphs-grafana
   namespace: graphs
   labels:
-    helm.sh/chart: grafana-6.58.8
+    helm.sh/chart: grafana-7.0.8
     app.kubernetes.io/name: grafana
     app.kubernetes.io/instance: graphs
-    app.kubernetes.io/version: "10.0.3"
+    app.kubernetes.io/version: "10.1.5"
     app.kubernetes.io/managed-by: Helm
 spec:
   type: ClusterIP
@@ -128,10 +128,10 @@ metadata:
   name: graphs-grafana
   namespace: graphs
   labels:
-    helm.sh/chart: grafana-6.58.8
+    helm.sh/chart: grafana-7.0.8
     app.kubernetes.io/name: grafana
     app.kubernetes.io/instance: graphs
-    app.kubernetes.io/version: "10.0.3"
+    app.kubernetes.io/version: "10.1.5"
     app.kubernetes.io/managed-by: Helm
 spec:
   replicas: 1
@@ -148,7 +148,7 @@ spec:
         app.kubernetes.io/name: grafana
         app.kubernetes.io/instance: graphs
       annotations:
-        checksum/config: 8a3e7e44cd69e31915087160ddf6df05759ba46cb36187c4d850b6c3905d8a82
+        checksum/config: 3c073561a25f65665f1c1ed63484c56c1f61a7fe209d8628b14ea52ad8706342
         checksum/dashboards-json-config: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
         checksum/sc-dashboard-provider-config: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
         kubectl.kubernetes.io/default-container: grafana
@@ -163,7 +163,7 @@ spec:
         runAsUser: 472
       initContainers:
         - name: init-chown-data
-          image: "docker.io/library/busybox:1.36.1"
+          image: "docker.io/library/busybox:1.31.1"
           imagePullPolicy: IfNotPresent
           securityContext:
             capabilities:
@@ -184,7 +184,7 @@ spec:
       enableServiceLinks: true
       containers:
         - name: grafana
-          image: "docker.io/grafana/grafana:10.0.3"
+          image: "docker.io/grafana/grafana:10.1.5"
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false
@@ -269,10 +269,10 @@ metadata:
   name: graphs-grafana
   namespace: graphs
   labels:
-    helm.sh/chart: grafana-6.58.8
+    helm.sh/chart: grafana-7.0.8
     app.kubernetes.io/name: grafana
     app.kubernetes.io/instance: graphs
-    app.kubernetes.io/version: "10.0.3"
+    app.kubernetes.io/version: "10.1.5"
     app.kubernetes.io/managed-by: Helm
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
@@ -299,10 +299,10 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   labels:
-    helm.sh/chart: grafana-6.58.8
+    helm.sh/chart: grafana-7.0.8
     app.kubernetes.io/name: grafana
     app.kubernetes.io/instance: graphs
-    app.kubernetes.io/version: "10.0.3"
+    app.kubernetes.io/version: "10.1.5"
     app.kubernetes.io/managed-by: Helm
   name: graphs-grafana-test
   namespace: graphs
@@ -320,10 +320,10 @@ metadata:
     "helm.sh/hook": test-success
     "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
   labels:
-    helm.sh/chart: grafana-6.58.8
+    helm.sh/chart: grafana-7.0.8
     app.kubernetes.io/name: grafana
     app.kubernetes.io/instance: graphs
-    app.kubernetes.io/version: "10.0.3"
+    app.kubernetes.io/version: "10.1.5"
     app.kubernetes.io/managed-by: Helm
 data:
   run.sh: |-
@@ -340,10 +340,10 @@ kind: Pod
 metadata:
   name: graphs-grafana-test
   labels:
-    helm.sh/chart: grafana-6.58.8
+    helm.sh/chart: grafana-7.0.8
     app.kubernetes.io/name: grafana
     app.kubernetes.io/instance: graphs
-    app.kubernetes.io/version: "10.0.3"
+    app.kubernetes.io/version: "10.1.5"
     app.kubernetes.io/managed-by: Helm
   annotations:
     "helm.sh/hook": test-success
@@ -353,7 +353,7 @@ spec:
   serviceAccountName: graphs-grafana-test
   containers:
     - name: graphs-test
-      image: "docker.io/bats/bats:v1.10.0"
+      image: "docker.io/bats/bats:v1.4.1"
       imagePullPolicy: "IfNotPresent"
       command: ["/opt/bats/bin/bats", "-t", "/tests/run.sh"]
       volumeMounts:
