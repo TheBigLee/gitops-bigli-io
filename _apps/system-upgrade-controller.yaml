@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: k8up-cluster-backup
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  source:
+    path: system-upgrade-controller
+    repoURL: https://github.com/TheBigLee/gitops-bigli-io.git
+    targetRevision: HEAD
+  destination:
+    namespace: system-uupgrade
+    server: https://kubernetes.default.svc
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    synOptions:
+      - CreateNamespace=true
