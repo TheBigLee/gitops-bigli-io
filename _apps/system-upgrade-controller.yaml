@@ -11,7 +11,7 @@ spec:
     repoURL: https://github.com/TheBigLee/gitops-bigli-io.git
     targetRevision: HEAD
   destination:
-    namespace: system-uupgrade
+    namespace: system-upgrade
     server: https://kubernetes.default.svc
   project: default
   syncPolicy:
