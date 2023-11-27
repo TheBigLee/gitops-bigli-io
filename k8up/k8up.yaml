@@ -5,7 +5,7 @@ kind: ServiceAccount
 metadata:
   name: k8up
   labels:
-    helm.sh/chart: k8up-4.4.1
+    helm.sh/chart: k8up-4.4.3
     app.kubernetes.io/name: k8up
     app.kubernetes.io/instance: k8up
     app.kubernetes.io/managed-by: Helm
@@ -16,7 +16,7 @@ kind: ClusterRole
 metadata:
   name: 'k8up-executor'
   labels:
-    helm.sh/chart: k8up-4.4.1
+    helm.sh/chart: k8up-4.4.3
     app.kubernetes.io/name: k8up
     app.kubernetes.io/instance: k8up
     app.kubernetes.io/managed-by: Helm
@@ -53,7 +53,7 @@ kind: ClusterRole
 metadata:
   name: 'k8up-manager'
   labels:
-    helm.sh/chart: k8up-4.4.1
+    helm.sh/chart: k8up-4.4.3
     app.kubernetes.io/name: k8up
     app.kubernetes.io/instance: k8up
     app.kubernetes.io/managed-by: Helm
@@ -389,7 +389,7 @@ kind: ClusterRoleBinding
 metadata:
   name: k8up
   labels:
-    helm.sh/chart: k8up-4.4.1
+    helm.sh/chart: k8up-4.4.3
     app.kubernetes.io/name: k8up
     app.kubernetes.io/instance: k8up
     app.kubernetes.io/managed-by: Helm
@@ -408,7 +408,7 @@ kind: Service
 metadata:
   name: k8up-metrics
   labels:
-    helm.sh/chart: k8up-4.4.1
+    helm.sh/chart: k8up-4.4.3
     app.kubernetes.io/name: k8up
     app.kubernetes.io/instance: k8up
     app.kubernetes.io/managed-by: Helm
@@ -428,7 +428,7 @@ kind: Deployment
 metadata:
   name: k8up
   labels:
-    helm.sh/chart: k8up-4.4.1
+    helm.sh/chart: k8up-4.4.3
     app.kubernetes.io/name: k8up
     app.kubernetes.io/instance: k8up
     app.kubernetes.io/managed-by: Helm
@@ -448,12 +448,12 @@ spec:
         {}
       containers:
         - name: k8up-operator
-          image: "ghcr.io/k8up-io/k8up:v2.7.1"
+          image: "ghcr.io/k8up-io/k8up:v2.7.2"
           imagePullPolicy: IfNotPresent
           args: [ operator ]
           env:
             - name: BACKUP_IMAGE
-              value: "ghcr.io/k8up-io/k8up:v2.7.1"
+              value: "ghcr.io/k8up-io/k8up:v2.7.2"
             - name: BACKUP_ENABLE_LEADER_ELECTION
               value: "true"
             - name: BACKUP_OPERATOR_NAMESPACE
@@ -494,7 +494,7 @@ metadata:
     "helm.sh/hook-weight": "1"
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
   labels:
-    helm.sh/chart: k8up-4.4.1
+    helm.sh/chart: k8up-4.4.3
     app.kubernetes.io/name: k8up
     app.kubernetes.io/instance: k8up
     app.kubernetes.io/managed-by: Helm
@@ -511,7 +511,7 @@ metadata:
     "helm.sh/hook-weight": "2"
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
   labels:
-    helm.sh/chart: k8up-4.4.1
+    helm.sh/chart: k8up-4.4.3
     app.kubernetes.io/name: k8up
     app.kubernetes.io/instance: k8up
     app.kubernetes.io/managed-by: Helm
@@ -541,7 +541,7 @@ metadata:
     "helm.sh/hook-weight": "3"
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
   labels:
-    helm.sh/chart: k8up-4.4.1
+    helm.sh/chart: k8up-4.4.3
     app.kubernetes.io/name: k8up
     app.kubernetes.io/instance: k8up
     app.kubernetes.io/managed-by: Helm
@@ -560,7 +560,7 @@ kind: Job
 metadata:
   name: "k8up-cleanup"
   labels:
-    helm.sh/chart: k8up-4.4.1
+    helm.sh/chart: k8up-4.4.3
     app.kubernetes.io/name: k8up
     app.kubernetes.io/instance: k8up
     app.kubernetes.io/managed-by: Helm
@@ -580,7 +580,8 @@ spec:
       serviceAccountName: cleanup-service-account
       containers:
       - name: "k8up-cleanup"
-        image: "bitnami/kubectl:latest"
+        image: "docker.io/bitnami/kubectl:latest"
+        imagePullPolicy: IfNotPresent
         command:
           - sh
           - -c
