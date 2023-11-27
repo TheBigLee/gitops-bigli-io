@@ -10,4 +10,5 @@ spec:
         tls:
           enabled: true
       web:
-        redirectTo: websecure
+        redirectTo:
+          port: websecure
