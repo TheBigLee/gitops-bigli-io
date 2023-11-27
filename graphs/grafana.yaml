@@ -163,7 +163,7 @@ spec:
         runAsUser: 472
       initContainers:
         - name: init-chown-data
-          image: "docker.io/library/busybox:1.31.1"
+          image: "docker.io/library/busybox:1.36.1"
           imagePullPolicy: IfNotPresent
           securityContext:
             capabilities:
