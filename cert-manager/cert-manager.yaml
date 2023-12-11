@@ -5815,7 +5815,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: cert-manager-startupapicheck
-          image: "quay.io/jetstack/cert-manager-ctl:v1.13.2"
+          image: "quay.io/jetstack/cert-manager-ctl:v1.13.3"
           imagePullPolicy: IfNotPresent
           args:
           - check
