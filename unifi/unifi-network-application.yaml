@@ -1,0 +1,204 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: unifi-config
+  labels:
+    app.kubernetes.io/instance: unifi
+    app.kubernetes.io/name: unifi
+  annotations:
+spec:
+  accessModes:
+    - "ReadWriteOnce"
+  resources:
+    requests:
+      storage: "1Gi"
+  storageClassName: "local-path-ssd"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: unifi
+  labels:
+    app.kubernetes.io/instance: unifi
+    app.kubernetes.io/name: unifi
+  annotations:
+    traefik.ingress.kubernetes.io/service.serverstransport: unifi-ingress-transport
+    traefik.ingress.kubernetes.io/service.serversscheme: https
+spec:
+  type: ClusterIP
+  ports:
+    - name: device-comm
+      port: 8080
+      protocol: TCP
+    - name: stun
+      port: 3478
+      protocol: UDP
+    - name: default-console
+      port: 8443
+      protocol: TCP
+    - name: secure-redirect
+      port: 8843
+      protocol: TCP
+    - name: http-redirect
+      port: 8880
+      protocol: TCP
+    - name: speedtest
+      port: 6789
+      protocol: TCP
+    - name: unifi-disc
+      port: 10001
+      protocol: UDP
+    - name: unifi-disc-l2
+      port: 1900
+      protocol: UDP
+  selector:
+    app.kubernetes.io/name: unifi
+    app.kubernetes.io/instance: unifi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unifi
+  labels:
+    app.kubernetes.io/instance: unifi
+    app.kubernetes.io/name: unifi
+spec:
+  revisionHistoryLimit: 3
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: unifi
+      app.kubernetes.io/instance: unifi
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: unifi
+        app.kubernetes.io/instance: unifi
+    spec:
+      serviceAccountName: default
+      automountServiceAccountToken: true
+      dnsPolicy: ClusterFirst
+      enableServiceLinks: true
+      containers:
+        - name: unifi
+          image: "lscr.io/linuxserver/unifi-network-application:latest"
+          imagePullPolicy: Always
+          env:
+            - name: "TZ"
+              value: "Europe/Zurich"
+            - name: "PUID"
+              value: "1000"
+            - name: "GUID"
+              value: "1000"
+            - name: "MONGO_USER"
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-credentials
+                  key: mongo-user
+            - name: "MONGO_PASS"
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-credentials
+                  key: mongo-pass
+            - name: "MONGO_DBNAME"
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-credentials
+                  key: mongo-db
+            - name: "MONGO_HOST"
+              value: "mongodb"
+            - name: "MONGO_PORT"
+              value: "27017"
+          ports:
+            - name: device-comm
+              containerPort: 8080
+              protocol: TCP
+            - name: stun
+              containerPort: 3478
+              protocol: UDP
+            - name: default-console
+              containerPort: 8443
+              protocol: TCP
+            - name: secure-redirect
+              containerPort: 8843
+              protocol: TCP
+            - name: http-redirect
+              containerPort: 8880
+              protocol: TCP
+            - name: speedtest
+              containerPort: 6789
+              protocol: TCP
+            - name: unifi-disc
+              containerPort: 10001
+              protocol: UDP
+            - name: unifi-disc-l2
+              containerPort: 1900
+              protocol: UDP
+          volumeMounts:
+            - name: config
+              mountPath: /config
+          livenessProbe:
+            tcpSocket:
+              port: 8443
+            failureThreshold: 5
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 8443
+            initialDelaySeconds: 0
+            failureThreshold: 3
+            timeoutSeconds: 1
+            periodSeconds: 10
+          startupProbe:
+            tcpSocket:
+              port: 8443
+            initialDelaySeconds: 0
+            failureThreshold: 30
+            timeoutSeconds: 1
+            periodSeconds: 5
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: unifi-config
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: unifi
+  labels:
+    app.kubernetes.io/instance: unifi
+    app.kubernetes.io/name: unifi
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    ingress.kubernetes.io/ssl-redirect: "true"
+    kubernetes.io/ingress.class: traefik
+spec:
+  tls:
+    - hosts:
+        - "unifi.bigli.io"
+      secretName: "unifi-tls"
+  rules:
+    - host: "unifi.bigli.io"
+      http:
+        paths:
+          - path: "/"
+            pathType: Prefix
+            backend:
+              service:
+                name: unifi
+                port:
+                  number: 8443
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: ServersTransport
+metadata:
+  name: unifi-ingress-transport
+spec:
+  insecureSkipVerify: true
