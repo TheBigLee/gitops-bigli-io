@@ -353,7 +353,7 @@ spec:
   serviceAccountName: graphs-grafana-test
   containers:
     - name: graphs-test
-      image: "docker.io/bats/bats:v1.10.0"
+      image: "docker.io/bats/bats:1.11.0"
       imagePullPolicy: "IfNotPresent"
       command: ["/opt/bats/bin/bats", "-t", "/tests/run.sh"]
       volumeMounts:
