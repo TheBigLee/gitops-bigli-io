@@ -118,7 +118,7 @@ spec:
       serviceAccountName: influxdb
       containers:
       - name: influxdb
-        image: "influxdb:1.8.10-alpine"
+        image: "influxdb:2.7.10-alpine"
         imagePullPolicy: "IfNotPresent"
         ports:
         - name: api
